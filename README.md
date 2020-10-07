@@ -2,4 +2,4 @@
 
 ## [0.0.1]
 
-First release.
+First version of Loading Mixin.
