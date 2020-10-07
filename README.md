@@ -31,9 +31,11 @@ dependencies:
 ```
 
 #### Basic:
+
+#### First: in your State class, add the mixin to the LoadingMixin class
 ```dart
 import 'package:loading_mixin/loading_mixin.dart';
-//First: in your State class, add the mixin to the LoadingMixin class
+
 class LoadingMixinTest extends StatefulWidget {
   @override
   _LoadingMixinTestState createState() => _LoadingMixinTestState();
@@ -53,9 +55,10 @@ class _LoadingMixinTestState extends State<LoadingMixinTest> with LoadingMixin {
   .
   .
   .
-  .
+  ```
 
-  //Second: add the startLoad method by passing your asynchronous function wherever you need
+#### Second: add the startLoad method by passing your asynchronous function wherever you need
+```dart
   RaisedButton(onPressed: () async {
         var result = await this.startLoad(context, requestData);
 
@@ -73,9 +76,9 @@ class _LoadingMixinTestState extends State<LoadingMixinTest> with LoadingMixin {
 }
 ```
 
-#### Custom:
+#### Custom: You can also customize your loading by passing the customLaod parameter
 ```dart
-//You can also customize your loading by passing the customLaod parameter
+
 RaisedButton(
 onPressed: () async {
     var customLoad = Container(
