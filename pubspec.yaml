@@ -1,5 +1,5 @@
 name: loading_mixin
-description: Add loading to your app with just two words, adding this mixin to your class.
+description: Add loading to your application with just two words, adding this mixin to your class.
 version: 0.0.1
 homepage: https://github.com/tiagosito/loading_mixin
 

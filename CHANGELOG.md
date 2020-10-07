@@ -1,3 +1,5 @@
-## [0.0.1] - TODO: Add release date.
+# loading_mixin
 
-* TODO: Describe initial release.
+## [0.0.1]
+
+First version of Loading Mixin.
