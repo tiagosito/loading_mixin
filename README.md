@@ -1,6 +1,7 @@
 <img src="https://github.com/tiagosito/loading_mixin/raw/master/doc/assets/loading_mixin_full.png" width="100%" alt="logo" />
 <h2 align="center">
   Want to add Loading to your app?
+  </b>
   With Loading Mixin you get it in a simple, fast and customizable way
 </h2>
 
