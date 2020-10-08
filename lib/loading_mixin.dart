@@ -19,13 +19,13 @@ mixin LoadingMixin {
   ///
   /// Function: [callback], Your asynchronous function
   ///
-  /// double: [loadingWidth], CircularProgressIndicator width, default [50.0]
+  /// double: [loadingWidth], CircularProgressIndicator width, default value [50.0]
   ///
-  /// double: [loadingHeight], CircularProgressIndicator height, default [50.0]
+  /// double: [loadingHeight], CircularProgressIndicator height, default value [50.0]
   ///
-  /// Color: [loadingCircularColor], CircularProgressIndicator color, default [Theme.of(context).primaryColor]
+  /// Color: [loadingCircularColor], CircularProgressIndicator color, default value [Theme.of(context).primaryColor]
   ///
-  /// Color: [loadingBarrierColor], Screen background color, default [Colors.grey.withOpacity(0.2)]
+  /// Color: [loadingBarrierColor], Screen background color, default value [Colors.grey.withOpacity(0.2)]
   ///
   /// Example:
   /// ```
