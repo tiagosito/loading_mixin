@@ -75,7 +75,9 @@ mixin LoadingMixin {
         ? _createLoading(
             context,
             isLoading,
-            this._customLoad != null ? this._customLoad : _createCircularProgressIndicator(),
+            this._customLoad != null
+                ? this._customLoad
+                : _createCircularProgressIndicator(),
           )
         : _closeLoading();
   }
@@ -102,7 +104,9 @@ mixin LoadingMixin {
         color: Colors.transparent,
         child: CircularProgressIndicator(
           valueColor: new AlwaysStoppedAnimation<Color>(
-            _loadingCircularColor != null ? _loadingCircularColor : Theme.of(_context).primaryColor,
+            _loadingCircularColor != null
+                ? _loadingCircularColor
+                : Theme.of(_context).primaryColor,
           ),
         ),
       ),
