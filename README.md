@@ -31,6 +31,9 @@ dependencies:
   loading_mixin: any
 ```
 
+### Load type: Automatic, Manual and Predefined Time
+<img src="https://github.com/tiagosito/loading_mixin/blob/master/doc/assets/loading_mixin.gif?raw=true" width="30%" alt="Loading Mixin" />
+
 #### Basic:
 
 #### First: in your State class, add the mixin to the LoadingMixin class

@@ -1,5 +1,9 @@
 # loading_mixin
 
+## [0.0.3]
+
+Added Automatic, Manual and PredefinedTime methods.
+
 ## [0.0.2]
 
 Added formatted code and documentation.

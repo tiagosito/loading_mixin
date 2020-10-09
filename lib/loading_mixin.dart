@@ -15,6 +15,8 @@ mixin LoadingMixin {
   ///
   /// Parameters:
   ///
+  /// BuildContext: [context], A handle to the location of a widget in the widget tree
+  ///
   /// Widget: [customLoad], Create your own custom loading
   ///
   /// Function: [callback], Your asynchronous function
@@ -31,7 +33,7 @@ mixin LoadingMixin {
   /// ```
   /// RaisedButton(
   ///  onPressed: () async {
-  ///     var result = await this.startLoad(requestData);
+  ///     var result = await this.startLoad(context, requestData);
   ///   },
   ///  child: Text('Fetch'),
   /// )
@@ -43,7 +45,7 @@ mixin LoadingMixin {
   /// }
   /// ```
   ///
-  Future<T> startLoad<T>(
+  Future<T> startAutomaticLoad<T>(
     BuildContext context,
     Function callback, {
     Widget customLoad,
@@ -52,22 +54,176 @@ mixin LoadingMixin {
     Color loadingCircularColor,
     Color loadingBarrierColor = Colors.white,
   }) async {
-    _setValues(
-      context,
-      customLoad,
-      loadingCircularColor,
-      loadingWidth,
-      loadingHeight,
-      loadingBarrierColor,
-    );
+    try {
+      _setValues(
+        context,
+        customLoad,
+        loadingCircularColor,
+        loadingWidth,
+        loadingHeight,
+        loadingBarrierColor,
+      );
 
-    this._loading(context, isLoading: true);
+      this._loading(context, isLoading: true);
 
-    T value = await callback();
+      T value = await callback();
 
-    this._loading(context, isLoading: false);
+      this._loading(context, isLoading: false);
 
-    return value;
+      return value;
+    } catch (e) {
+      print(e.toString());
+      this._loading(context, isLoading: false);
+      return e;
+    }
+  }
+
+  ///
+  /// Method name: [startManualLoad]
+  ///
+  /// This is the method for calling when you want to start and close the load manually
+  ///
+  /// Parameters:
+  ///
+  /// BuildContext: [context], A handle to the location of a widget in the widget tree
+  ///
+  /// bool: [isLoading], The load widget is shown if [isLoading == true]. If [isLoading == false] The load widget will be canceled, default value [false]
+  ///
+  /// Widget: [customLoad], Create your own custom loading
+  ///
+  /// double: [loadingWidth], CircularProgressIndicator width, default value [50.0]
+  ///
+  /// double: [loadingHeight], CircularProgressIndicator height, default value [50.0]
+  ///
+  /// Color: [loadingCircularColor], CircularProgressIndicator color, default value [Theme.of(context).primaryColor]
+  ///
+  /// Color: [loadingBarrierColor], Screen background color, default value [Colors.grey.withOpacity(0.2)]
+  ///
+  /// Example:
+  /// ```
+  /// RaisedButton(
+  ///  onPressed: () async {
+  ///     //Start Laod
+  ///     var result = await this.startManualLoad(context, isLoading: true);
+  ///
+  ///     //Code here
+  ///     print('result');
+  ///
+  ///     //Close Laod
+  ///     var result = await this.startManualLoad(context);
+  ///   },
+  ///  child: Text('Fetch'),
+  /// )
+  ///
+  /// //HTTP request Example
+  /// static Future requestData() async {
+  ///   await Future.delayed(Duration(milliseconds: 1500));
+  ///   return 1844;
+  /// }
+  /// ```
+  ///
+  startManualLoad(
+    BuildContext context, {
+    Widget customLoad,
+    bool isLoading = false,
+    double loadingWidth = 50.0,
+    double loadingHeight = 50.0,
+    Color loadingCircularColor,
+    Color loadingBarrierColor = Colors.white,
+  }) {
+    try {
+      _setValues(
+        context,
+        customLoad,
+        loadingCircularColor,
+        loadingWidth,
+        loadingHeight,
+        loadingBarrierColor,
+      );
+
+      this._loading(context, isLoading: isLoading);
+    } catch (e) {
+      print(e.toString());
+      this._loading(context, isLoading: false);
+      return e;
+    }
+  }
+
+  ///
+  /// Method name: [startLoadPredefinedTime]
+  ///
+  /// This is the method for calling when you want to start and close the load with a predefined time
+  ///
+  /// Parameters:
+  ///
+  /// BuildContext: [context], A handle to the location of a widget in the widget tree
+  ///
+  /// Duration: [predefinedTime], How long do you want Load to be active, default value [const Duration(seconds: 3)]
+  ///
+  /// Widget: [customLoad], Create your own custom loading
+  ///
+  /// double: [loadingWidth], CircularProgressIndicator width, default value [50.0]
+  ///
+  /// double: [loadingHeight], CircularProgressIndicator height, default value [50.0]
+  ///
+  /// Color: [loadingCircularColor], CircularProgressIndicator color, default value [Theme.of(context).primaryColor]
+  ///
+  /// Color: [loadingBarrierColor], Screen background color, default value [Colors.grey.withOpacity(0.2)]
+  ///
+  /// Example:
+  /// ```
+  /// RaisedButton(
+  ///  onPressed: () async {
+  ///     //Start Laod
+  ///     var result = await this.startLoadPredefinedTime(context);
+  ///
+  ///     //Code here
+  ///     print('result');
+  ///
+  ///     //Close Laod
+  ///     var result = await this.startManualLoad(context, false);
+  ///   },
+  ///  child: Text('Fetch'),
+  /// )
+  ///
+  /// //HTTP request Example
+  /// static Future requestData() async {
+  ///   await Future.delayed(Duration(milliseconds: 1500));
+  ///   return 1844;
+  /// }
+  /// ```
+  ///
+  startLoadPredefinedTime(
+    BuildContext context, {
+    Widget customLoad,
+    double loadingWidth = 50.0,
+    double loadingHeight = 50.0,
+    Color loadingCircularColor,
+    Color loadingBarrierColor = Colors.white,
+    Duration predefinedTime = const Duration(seconds: 3),
+  }) async {
+    try {
+      _setValues(
+        context,
+        customLoad,
+        loadingCircularColor,
+        loadingWidth,
+        loadingHeight,
+        loadingBarrierColor,
+      );
+
+      this._loading(context, isLoading: true);
+
+      predefinedTime =
+          predefinedTime == null ? Duration(seconds: 3) : predefinedTime;
+      await Future.delayed(predefinedTime);
+
+      this._loading(context, isLoading: false);
+    } catch (e) {
+      print(e.toString());
+      this._loading(context, isLoading: false);
+      return e;
+    }
   }
 
   _loading(BuildContext context, {bool isLoading = false}) {
@@ -102,11 +258,16 @@ mixin LoadingMixin {
         width: _loadingWidth,
         height: _loadingHeight,
         color: Colors.transparent,
-        child: CircularProgressIndicator(
-          valueColor: new AlwaysStoppedAnimation<Color>(
-            _loadingCircularColor != null
-                ? _loadingCircularColor
-                : Theme.of(_context).primaryColor,
+        child: GestureDetector(
+          onTap: () {
+            _closeLoading();
+          },
+          child: CircularProgressIndicator(
+            valueColor: new AlwaysStoppedAnimation<Color>(
+              _loadingCircularColor != null
+                  ? _loadingCircularColor
+                  : Theme.of(_context).primaryColor,
+            ),
           ),
         ),
       ),
