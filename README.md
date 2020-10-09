@@ -25,7 +25,7 @@ This package is for you to add loading to your application with just two words, 
 #### Getting Started
 
 
-In _pubspec.yaml_:
+### In _pubspec.yaml_:
 ```yaml
 dependencies:
   loading_mixin: any
