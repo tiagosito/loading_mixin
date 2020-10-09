@@ -31,7 +31,7 @@ dependencies:
   loading_mixin: any
 ```
 
-### Load type: Automatic, Manual and Predefined Time
+### Load type: Automatic, Custom, Manual and Predefined Time
 <img src="https://github.com/tiagosito/loading_mixin/blob/master/doc/assets/loading_mixin.gif?raw=true" width="30%" alt="Loading Mixin" />
 
 #### Basic:
