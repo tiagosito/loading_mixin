@@ -258,16 +258,11 @@ mixin LoadingMixin {
         width: _loadingWidth,
         height: _loadingHeight,
         color: Colors.transparent,
-        child: GestureDetector(
-          onTap: () {
-            _closeLoading();
-          },
-          child: CircularProgressIndicator(
-            valueColor: new AlwaysStoppedAnimation<Color>(
-              _loadingCircularColor != null
-                  ? _loadingCircularColor
-                  : Theme.of(_context).primaryColor,
-            ),
+        child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(
+            _loadingCircularColor != null
+                ? _loadingCircularColor
+                : Theme.of(_context).primaryColor,
           ),
         ),
       ),

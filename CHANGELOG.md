@@ -1,5 +1,9 @@
 # loading_mixin
 
+## [0.0.4]
+
+Remove cancel.
+
 ## [0.0.3]
 
 Added Automatic, Manual and PredefinedTime methods.

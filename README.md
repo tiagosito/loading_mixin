@@ -20,6 +20,9 @@ This package is for you to add loading to your application with just two words, 
 #### Contributing
   - [https://github.com/tiagosito/loading_mixin](https://github.com/tiagosito/loading_mixin)
 
+#### For more information, see the complete example
+  - [https://pub.dev/packages/loading_mixin/example](https://pub.dev/packages/loading_mixin/example)
+
 - **[Getting Started](#getting-started)**
 
 #### Getting Started
@@ -72,7 +75,7 @@ class _LoadingMixinTestState extends State<LoadingMixinTest> with LoadingMixin {
     ),
   )
 
-  //HTTP request Example
+  //Async/HTTP request Example
   static Future requestData() async {
     await Future.delayed(Duration(milliseconds: 1500));
     return 1844;
