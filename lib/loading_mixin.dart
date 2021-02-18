@@ -1,15 +1,10 @@
 import 'package:flutter/material.dart';
 
-mixin LoadingMixin {
-  BuildContext _context;
-  Widget _customLoad;
-  double _loadingWidth = 50.0;
-  double _loadingHeight = 50.0;
-  Color _loadingCircularColor;
-  Color _loadingBarrierColor = Colors.white.withOpacity(0.4);
+import 'loadig_configuration.dart';
 
+mixin LoadingMixin {
   ///
-  /// Method name: [startLoad]
+  /// Method name: [startAutomaticLoad]
   ///
   /// This is the method for calling your asynchronous function
   ///
@@ -17,23 +12,16 @@ mixin LoadingMixin {
   ///
   /// BuildContext: [context], A handle to the location of a widget in the widget tree
   ///
-  /// Widget: [customLoad], Create your own custom loading
-  ///
   /// Function: [callback], Your asynchronous function
   ///
-  /// double: [loadingWidth], CircularProgressIndicator width, default value [50.0]
+  /// Widget: [loadingConfig], Create your own custom loading or make your customization
   ///
-  /// double: [loadingHeight], CircularProgressIndicator height, default value [50.0]
-  ///
-  /// Color: [loadingCircularColor], CircularProgressIndicator color, default value [Theme.of(context).primaryColor]
-  ///
-  /// Color: [loadingBarrierColor], Screen background color, default value [Colors.grey.withOpacity(0.2)]
   ///
   /// Example:
   /// ```
   /// RaisedButton(
   ///  onPressed: () async {
-  ///     var result = await this.startLoad(context, requestData);
+  ///     var result = await this.startAutomaticLoad(context, requestData);
   ///   },
   ///  child: Text('Fetch'),
   /// )
@@ -45,35 +33,24 @@ mixin LoadingMixin {
   /// }
   /// ```
   ///
-  Future<T> startAutomaticLoad<T>(
-    BuildContext context,
-    Function callback, {
-    Widget customLoad,
-    double loadingWidth = 50.0,
-    double loadingHeight = 50.0,
-    Color loadingCircularColor,
-    Color loadingBarrierColor = Colors.white,
-  }) async {
+  Future<LoadingResult> startAutomaticLoad<LoadingResult>(
+      BuildContext context, Function callback,
+      {LoadingConfig loadingConfig}) async {
+    OverlayState overlayState = Overlay.of(context);
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder: (context) => loadingConfig ?? LoadingConfig(),
+    );
+
     try {
-      _setValues(
-        context,
-        customLoad,
-        loadingCircularColor,
-        loadingWidth,
-        loadingHeight,
-        loadingBarrierColor,
-      );
+      overlayState.insert(overlayEntry);
 
-      this._loading(context, isLoading: true);
+      LoadingResult value = await callback();
 
-      T value = await callback();
-
-      this._loading(context, isLoading: false);
-
+      overlayEntry.remove();
       return value;
     } catch (e) {
-      print(e.toString());
-      this._loading(context, isLoading: false);
+      debugPrint('\n\n **************\n\nERROR: $e\n\n');
+      overlayEntry.remove();
       return e;
     }
   }
@@ -87,30 +64,20 @@ mixin LoadingMixin {
   ///
   /// BuildContext: [context], A handle to the location of a widget in the widget tree
   ///
-  /// bool: [isLoading], The load widget is shown if [isLoading == true]. If [isLoading == false] The load widget will be canceled, default value [false]
-  ///
-  /// Widget: [customLoad], Create your own custom loading
-  ///
-  /// double: [loadingWidth], CircularProgressIndicator width, default value [50.0]
-  ///
-  /// double: [loadingHeight], CircularProgressIndicator height, default value [50.0]
-  ///
-  /// Color: [loadingCircularColor], CircularProgressIndicator color, default value [Theme.of(context).primaryColor]
-  ///
-  /// Color: [loadingBarrierColor], Screen background color, default value [Colors.grey.withOpacity(0.2)]
+  /// Widget: [loadingConfig], Create your own custom loading or make your customization
   ///
   /// Example:
   /// ```
   /// RaisedButton(
   ///  onPressed: () async {
   ///     //Start Laod
-  ///     var result = await this.startManualLoad(context, isLoading: true);
+  ///     var ovelayEntry = this.startManualLoad(context);
   ///
   ///     //Code here
-  ///     print('result');
+  ///     result = await requestData();
   ///
   ///     //Close Laod
-  ///     var result = await this.startManualLoad(context);
+  ///     this.endManualLoad(context, ovelayEntry);
   ///   },
   ///  child: Text('Fetch'),
   /// )
@@ -122,66 +89,45 @@ mixin LoadingMixin {
   /// }
   /// ```
   ///
-  startManualLoad(
-    BuildContext context, {
-    Widget customLoad,
-    bool isLoading = false,
-    double loadingWidth = 50.0,
-    double loadingHeight = 50.0,
-    Color loadingCircularColor,
-    Color loadingBarrierColor = Colors.white,
-  }) {
-    try {
-      _setValues(
-        context,
-        customLoad,
-        loadingCircularColor,
-        loadingWidth,
-        loadingHeight,
-        loadingBarrierColor,
-      );
+  OverlayEntry startManualLoad<T>(BuildContext context,
+      {LoadingConfig loadingConfig}) {
+    OverlayState overlayState = Overlay.of(context);
+    OverlayEntry overlayEntry = OverlayEntry(
+      builder: (context) => loadingConfig ?? LoadingConfig(),
+    );
 
-      this._loading(context, isLoading: isLoading);
+    try {
+      overlayState.insert(overlayEntry);
+      return overlayEntry;
     } catch (e) {
-      print(e.toString());
-      this._loading(context, isLoading: false);
+      debugPrint('\n\n **************\n\nERROR: $e\n\n');
       return e;
     }
   }
 
   ///
-  /// Method name: [startLoadPredefinedTime]
+  /// Method name: [endManualLoad]
   ///
-  /// This is the method for calling when you want to start and close the load with a predefined time
+  /// This method needs to be called after you call the manual method and process what you want
   ///
   /// Parameters:
   ///
   /// BuildContext: [context], A handle to the location of a widget in the widget tree
   ///
-  /// Duration: [predefinedTime], How long do you want Load to be active, default value [const Duration(seconds: 3)]
-  ///
-  /// Widget: [customLoad], Create your own custom loading
-  ///
-  /// double: [loadingWidth], CircularProgressIndicator width, default value [50.0]
-  ///
-  /// double: [loadingHeight], CircularProgressIndicator height, default value [50.0]
-  ///
-  /// Color: [loadingCircularColor], CircularProgressIndicator color, default value [Theme.of(context).primaryColor]
-  ///
-  /// Color: [loadingBarrierColor], Screen background color, default value [Colors.grey.withOpacity(0.2)]
+  /// Widget: [overlayEntryToRemove], Overlay that will be added and then removed from the screen
   ///
   /// Example:
   /// ```
   /// RaisedButton(
   ///  onPressed: () async {
   ///     //Start Laod
-  ///     var result = await this.startLoadPredefinedTime(context);
+  ///     var ovelayEntry = this.startManualLoad(context);
   ///
   ///     //Code here
-  ///     print('result');
+  ///     result = await requestData();
   ///
   ///     //Close Laod
-  ///     var result = await this.startManualLoad(context, false);
+  ///     this.endManualLoad(context, ovelayEntry);
   ///   },
   ///  child: Text('Fetch'),
   /// )
@@ -193,109 +139,14 @@ mixin LoadingMixin {
   /// }
   /// ```
   ///
-  startLoadPredefinedTime(
-    BuildContext context, {
-    Widget customLoad,
-    double loadingWidth = 50.0,
-    double loadingHeight = 50.0,
-    Color loadingCircularColor,
-    Color loadingBarrierColor = Colors.white,
-    Duration predefinedTime = const Duration(seconds: 3),
-  }) async {
+  bool endManualLoad<T>(
+      BuildContext context, OverlayEntry overlayEntryToRemove) {
     try {
-      _setValues(
-        context,
-        customLoad,
-        loadingCircularColor,
-        loadingWidth,
-        loadingHeight,
-        loadingBarrierColor,
-      );
-
-      this._loading(context, isLoading: true);
-
-      predefinedTime =
-          predefinedTime == null ? Duration(seconds: 3) : predefinedTime;
-      await Future.delayed(predefinedTime);
-
-      this._loading(context, isLoading: false);
+      overlayEntryToRemove.remove();
+      return true;
     } catch (e) {
-      print(e.toString());
-      this._loading(context, isLoading: false);
+      debugPrint('\n\n **************\n\nERROR: $e\n\n');
       return e;
     }
-  }
-
-  _loading(BuildContext context, {bool isLoading = false}) {
-    isLoading
-        ? _createLoading(
-            context,
-            isLoading,
-            this._customLoad != null
-                ? this._customLoad
-                : _createCircularProgressIndicator(),
-          )
-        : _closeLoading();
-  }
-
-  _createLoading(BuildContext context, bool isLoading, Widget child) {
-    isLoading
-        ? showDialog(
-            context: context,
-            barrierColor: _loadingBarrierColor,
-            barrierDismissible: false,
-            builder: (_) => Material(
-              type: MaterialType.transparency,
-              child: child,
-            ),
-          )
-        : _closeLoading();
-  }
-
-  _createCircularProgressIndicator() {
-    return Center(
-      child: Container(
-        width: _loadingWidth,
-        height: _loadingHeight,
-        color: Colors.transparent,
-        child: CircularProgressIndicator(
-          valueColor: new AlwaysStoppedAnimation<Color>(
-            _loadingCircularColor != null
-                ? _loadingCircularColor
-                : Theme.of(_context).primaryColor,
-          ),
-        ),
-      ),
-    );
-  }
-
-  _closeLoading() {
-    Navigator.of(_context).pop();
-    _resetValues();
-  }
-
-  _setValues(
-    BuildContext context,
-    Widget customLoad,
-    Color loadingCircularColor,
-    double loadingWidth,
-    double loadingHeight,
-    Color loadingBarrierColor,
-  ) {
-    this._context = context != null ? context : this._context;
-    this._customLoad = customLoad != null ? customLoad : this._customLoad;
-    _loadingWidth = loadingWidth;
-    _loadingHeight = loadingHeight;
-    _loadingCircularColor = loadingCircularColor;
-    _loadingBarrierColor = loadingBarrierColor.withOpacity(0.4);
-  }
-
-  _resetValues() {
-    _context = null;
-    _customLoad = null;
-    _loadingWidth = 50.0;
-    _loadingHeight = 50.0;
-    _loadingCircularColor = null;
-    _loadingBarrierColor = null;
   }
 }

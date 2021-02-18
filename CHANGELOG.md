@@ -1,5 +1,9 @@
 # loading_mixin
 
+## [1.1.0]
+
+Brakchanges!
+
 ## [0.0.4]
 
 Remove cancel.

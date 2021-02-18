@@ -67,11 +67,11 @@ class _LoadingMixinTestState extends State<LoadingMixinTest> with LoadingMixin {
 #### Second: add the startLoad method by passing your asynchronous function wherever you need
 ```dart
   RaisedButton(onPressed: () async {
-        var result = await this.startLoad(context, requestData);
+      var result = await this.startAutomaticLoad(context, requestData);
 
-        result != null ? print('$result') : print('No data found!');
+      result != null ? print('$result') : print('No data found!');
     },
-    child: Text('Async',style: TextStyle(color: Colors.white),
+    child: Text('Default Load',style: TextStyle(color: Colors.white),
     ),
   )
 
@@ -86,27 +86,51 @@ class _LoadingMixinTestState extends State<LoadingMixinTest> with LoadingMixin {
 #### Custom: You can also customize your loading by passing the customLaod parameter
 ```dart
 
-RaisedButton(
-onPressed: () async {
+  RaisedButton(onPressed: () async {
     var customLoad = Container(
-    height: 50,
-    width: 50,
-    color: Colors.transparent,
-    child: Center(
-        child: CircularProgressIndicator(
-        valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
-        ),
-    ),
-    );
-    var result = await this.startLoad(context, requestData, customLoad: customLoad);
+      height: 50,
+      width: 50,
+      color: Colors.transparent,
+      child: Center(
+          child: CircularProgressIndicator(
+          valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
+          ),
+      ),
+      );
+      var result = await this.startAutomaticLoad(
+        context,
+        requestData,
+        loadingConfig: LoadingConfig(customLoad: customLoad),
+        );
 
-    result != null ? print('$result') : print('No data found!');
-},
-child: Text(
-    'Async',
-    style: TextStyle(color: Colors.white),
-),
-)
+      result != null ? print('$result') : print('No data found!');
+    },
+    child: Text(
+        'Async',
+        style: TextStyle(color: Colors.white),
+    ),
+  )
+
+```
+#### Manual Load: You can also start and finish the load manually
+```dart
+
+  RaisedButton( onPressed: () async {
+      //Open Load
+      var ovelayEntry = this.startManualLoad(context);
+
+      //Your code
+      print('Put your code here!');
+      await Future.delayed(Duration(seconds: 2));
+
+      //Close Load
+      this.endManualLoad(context, ovelayEntry);
+    },
+    child: Text(
+      'Manual Load',
+      style: TextStyle(color: Colors.white),
+    ),
+  )
 
 ```
 

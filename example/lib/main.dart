@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:loading_mixin/loadig_configuration.dart';
 import 'package:loading_mixin/loading_mixin.dart';
 
 void main() {
@@ -61,15 +62,18 @@ class _LoadingMixinTestState extends State<LoadingMixinTest> with LoadingMixin {
                       height: 150,
                       width: 150,
                       child: CircularProgressIndicator(
-                        strokeWidth: 80,
+                        strokeWidth: 25,
                         backgroundColor: Colors.deepPurple,
                         valueColor: new AlwaysStoppedAnimation<Color>(Colors.yellow),
                       ),
                     ),
                   ),
                 );
-                var result =
-                    await this.startAutomaticLoad(context, requestData, customLoad: customLoad, loadingBarrierColor: Colors.red);
+                var result = await this.startAutomaticLoad(
+                  context,
+                  requestData,
+                  loadingConfig: LoadingConfig(customLoad: customLoad),
+                );
 
                 result != null ? print('$result') : print('No data found!');
               },
@@ -81,31 +85,17 @@ class _LoadingMixinTestState extends State<LoadingMixinTest> with LoadingMixin {
             RaisedButton(
               onPressed: () async {
                 //Open Load
-                this.startManualLoad(context, isLoading: true);
+                var ovelayEntry = this.startManualLoad(context);
 
                 //Your code
                 print('Put your code here!');
                 await Future.delayed(Duration(seconds: 2));
 
                 //Close Load
-                this.startManualLoad(context);
+                this.endManualLoad(context, ovelayEntry);
               },
               child: Text(
                 'Manual Load',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-            RaisedButton(
-              onPressed: () {
-                //Wil open/close Load on the Predefined Time
-                //Default predefinedTime = 3 seconds
-                this.startLoadPredefinedTime(context, predefinedTime: Duration(seconds: 2));
-
-                //Your code
-                print('Put your code here!');
-              },
-              child: Text(
-                'Predefined Time',
                 style: TextStyle(color: Colors.white),
               ),
             ),
